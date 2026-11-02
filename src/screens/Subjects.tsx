@@ -4,6 +4,7 @@ import { useApp } from '../store'
 import { useNow } from '../app/useNow'
 import { Page, TitleRow } from '../app/Shell'
 import { Ring } from '../components/Ring'
+import { Dur } from '../components/Dur'
 import { SubjectIcon } from '../components/SubjectIcon'
 import { SubjectForm } from '../components/SubjectForm'
 import { QuickAddSubject } from '../components/QuickAddSubject'
@@ -64,10 +65,8 @@ export function Subjects() {
                 <div className="flex items-center gap-4">
                   <Ring value={progress(done, s.dailyGoalMin)} size={48} stroke={5} color={colorVar(s.color)} label={`${Math.round(done)} of ${s.dailyGoalMin} minutes today`} />
                   <div>
-                    <p className="text-2xl num leading-7">
-                      {Math.round(done)}
-                      <span className="unit">{s.dailyGoalMin ? ` /${s.dailyGoalMin}` : ''} min today</span>
-                    </p>
+                    <Dur min={done} className="text-2xl num leading-7 block" />
+                    <p className="meta mt-0.5">{s.dailyGoalMin ? `of ${duration(s.dailyGoalMin)} today` : 'today'}</p>
                   </div>
                 </div>
                 <div>
