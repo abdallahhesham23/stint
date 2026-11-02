@@ -76,7 +76,7 @@ Tapping the subject chip on the button opens a picker. With no subjects at all, 
 
 - A day counts if it has at least 1 logged minute.
 - Today never breaks a streak while it's still in progress.
-- In each week, the first day with no study is automatically a **rest day**. It bridges the streak but doesn't add to the count.
+- In each week, one day with no study is automatically a **rest day**: the most recent one, counting back from today. It bridges the streak but doesn't add to the count. A rest day that bridges nothing (no study before it) is not shown.
 - Milestones at 3, 7, 14, 30, 50 and 100 days each trigger one subtle celebration, once.
 
 ### Exams
