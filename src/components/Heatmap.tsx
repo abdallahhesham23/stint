@@ -38,7 +38,8 @@ export function Heatmap({ grid }: { grid: ReturnType<typeof heatmap> }) {
   const height = TOP + 7 * STEP
   return (
     <>
-      <div ref={scroller} className="overflow-x-auto -mx-1 px-1 pb-1">
+      {/* Keyboard users can scroll the year with the arrow keys once the region has focus. */}
+      <div ref={scroller} className="overflow-x-auto -mx-1 px-1 pb-1 rounded-input" tabIndex={0} role="region" aria-label="Year of study, one square per day">
         {/* Scales up to fill the panel; on narrow screens it keeps its size and scrolls. */}
         <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true" className="block w-full h-auto" style={{ minWidth: width }}>
           {months.map((m) => (

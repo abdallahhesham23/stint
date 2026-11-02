@@ -195,7 +195,8 @@ export function Settings() {
             <Upload size={16} strokeWidth={1.75} aria-hidden="true" />
             Restore from a backup
           </button>
-          <input ref={file} type="file" accept="application/json,.json" className="sr-only" tabIndex={-1} aria-hidden="true" onChange={(e) => readFile(e.target.files?.[0])} />
+          {/* Hidden picker; the visible "Restore from a backup" button opens it. */}
+          <input ref={file} type="file" accept="application/json,.json" hidden onChange={(e) => readFile(e.target.files?.[0])} />
         </div>
         {importError && (
           <p role="alert" className="text-sm text-negative">
