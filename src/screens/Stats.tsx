@@ -6,7 +6,7 @@ import { Heatmap } from '../components/Heatmap'
 import { Ladder } from '../components/Ladder'
 import { WeekBars } from '../components/WeekBars'
 import { addDays, dayKey } from '../lib/dates'
-import { duration, hourRange, hours, shortDate } from '../lib/format'
+import { duration, hourRange, shortDate } from '../lib/format'
 import { colorVar } from '../lib/palette'
 import { bestWindow, heatmap, perSubject, totalMinutes, weekBars } from '../lib/stats'
 
@@ -33,7 +33,7 @@ export function Stats() {
     <Page>
       <TitleRow
         title="Stats"
-        line={sessions.length ? `${hours(Math.round((total / 60) * 10) / 10)} in total · ${sessions.length} ${sessions.length === 1 ? 'session' : 'sessions'}` : 'Your year fills in one session at a time.'}
+        line={sessions.length ? `${duration(total)} in total across ${sessions.length} ${sessions.length === 1 ? 'session' : 'sessions'}` : 'Your year fills in one session at a time.'}
       />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <section className="lg:col-span-12 panel" aria-labelledby="year-title">
@@ -68,15 +68,11 @@ export function Stats() {
             </div>
             <div className="py-3 flex items-baseline justify-between">
               <dt className="meta">Average session</dt>
-              <dd className="text-[15px] num">{sessions.length ? duration(average) : '–'}</dd>
-            </div>
-            <div className="py-3 flex items-baseline justify-between">
-              <dt className="meta">Sessions</dt>
-              <dd className="text-[15px] num">{sessions.length}</dd>
+              <dd className="text-sm num">{sessions.length ? duration(average) : '–'}</dd>
             </div>
             <div className="py-3 last:pb-0 flex items-baseline justify-between">
-              <dt className="meta">Total</dt>
-              <dd className="text-[15px] num">{duration(total)}</dd>
+              <dt className="meta">Longest session</dt>
+              <dd className="text-sm num">{sessions.length ? duration(Math.max(...sessions.map((s) => s.durationSec / 60))) : '–'}</dd>
             </div>
           </dl>
         </section>
@@ -106,7 +102,7 @@ export function Stats() {
               })}
             </ul>
           ) : (
-            <p className="text-[15px] text-muted">The last 30 days are quiet so far. Your first session starts this.</p>
+            <p className="text-base text-muted">The last 30 days are quiet so far. Your first session starts this.</p>
           )}
         </section>
 

@@ -33,11 +33,12 @@ export function WeekBars({ bars, today }: { bars: { key: string; minutes: number
           ))}
           <ul className="absolute inset-0 grid grid-cols-7 gap-2 md:gap-3 px-1 items-end">
             {bars.map((b) => (
-              <li key={b.key} className="h-full flex items-end justify-center" aria-label={`${WEEKDAY.format(new Date(`${b.key}T00:00:00Z`))}: ${duration(b.minutes)}`}>
+              <li key={b.key} className="h-full flex items-end justify-center">
+                <span className="sr-only">{`${WEEKDAY.format(new Date(`${b.key}T00:00:00Z`))}: ${duration(b.minutes)}`}</span>
                 <div
                   data-bar
                   className="w-full max-w-10 rounded-t-[4px] origin-bottom"
-                  style={{ height: `${(b.minutes * 100) / top}%`, background: b.key === today ? 'var(--accent)' : 'color-mix(in srgb, var(--muted) 35%, transparent)' }}
+                  style={{ height: `${(b.minutes * 100) / top}%`, background: b.key === today ? 'var(--accent)' : 'color-mix(in srgb, var(--muted) 55%, transparent)' }}
                   title={duration(b.minutes)}
                 />
               </li>

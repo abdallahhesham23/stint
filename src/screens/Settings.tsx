@@ -23,6 +23,8 @@ function Row({ title, help, children }: { title: string; help: ReactNode; childr
 
 function Num({ id, label, value, min, max, step = 1, unit, onChange }: { id: string; label: string; value: number; min: number; max: number; step?: number; unit: string; onChange: (n: number) => void }) {
   const [text, setText] = useState(String(value))
+  const n = Number(text)
+  const invalid = text === '' || !(n >= min && n <= max)
   return (
     <div>
       <label htmlFor={id} className="label">
@@ -40,16 +42,17 @@ function Num({ id, label, value, min, max, step = 1, unit, onChange }: { id: str
           value={text}
           onChange={(e) => {
             setText(e.target.value)
-            const n = Number(e.target.value)
-            if (e.target.value !== '' && n >= min && n <= max) onChange(Math.round(n))
+            const v = Number(e.target.value)
+            if (e.target.value !== '' && v >= min && v <= max) onChange(Math.round(v))
           }}
           onBlur={() => setText(String(value))}
+          aria-invalid={invalid}
           aria-describedby={`${id}-range`}
         />
         <span className="absolute right-3.5 top-1/2 -translate-y-1/2 meta">{unit}</span>
       </div>
-      <p id={`${id}-range`} className="meta mt-1.5">
-        {min} to {max} {unit}
+      <p id={`${id}-range`} className={`meta mt-1.5 ${invalid ? '!text-negative' : ''}`} aria-live="polite">
+        {invalid ? `Pick a number from ${min} to ${max}. Still using ${value}.` : `${min} to ${max} ${unit}`}
       </p>
     </div>
   )
@@ -157,7 +160,7 @@ export function Settings() {
 
       <Row title="Sound and alerts" help="A soft chime when a round or a break ends, and a notification if Stint is in another tab.">
         <div className="flex items-center justify-between gap-4">
-          <label htmlFor="chime" className="text-[15px] font-medium">
+          <label htmlFor="chime" className="text-sm font-medium">
             Chime
           </label>
           <span className="flex items-center gap-3">
@@ -169,7 +172,7 @@ export function Settings() {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[15px] font-medium">Notifications</p>
+            <p className="text-sm font-medium">Notifications</p>
             <p className="meta mt-0.5">
               {permission === 'granted' ? 'On. Stint tells you when a break ends.' : permission === 'denied' ? 'Blocked in your browser settings. The chime still plays.' : 'Off for now.'}
             </p>
@@ -204,7 +207,7 @@ export function Settings() {
       <Dialog open={!!pending} onClose={() => setPending(null)} title="Restore this backup?">
         {pending && (
           <>
-            <p className="text-[15px]">
+            <p className="text-sm">
               This replaces what’s on this device with {pending.counts.subjects} {pending.counts.subjects === 1 ? 'subject' : 'subjects'}, {pending.counts.sessions}{' '}
               {pending.counts.sessions === 1 ? 'session' : 'sessions'} and {pending.counts.exams} {pending.counts.exams === 1 ? 'exam' : 'exams'}.
             </p>

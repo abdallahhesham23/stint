@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { clock, dayLabel, duration, greeting, hourRange, hours } from './format'
+import { clock, dayLabel, duration, greeting, hourRange } from './format'
 
 test('clock shows mm:ss, and h:mm:ss past an hour', () => {
   expect(clock(1500)).toBe('25:00')
@@ -14,13 +14,7 @@ test('duration reads like a person would say it', () => {
   expect(duration(60)).toBe('1 h')
   expect(duration(75.4)).toBe('1 h 15 min')
   expect(duration(59.6)).toBe('1 h')
-})
-
-test('hours trims trailing zeros', () => {
-  expect(hours(1.5)).toBe('1.5 h')
-  expect(hours(0.25)).toBe('0.25 h')
-  expect(hours(20)).toBe('20 h')
-  expect(hours(4.9999)).toBe('5 h')
+  expect(duration(1.75 * 60)).toBe('1 h 45 min')
 })
 
 test('greeting follows the time of day', () => {

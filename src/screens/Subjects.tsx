@@ -7,6 +7,7 @@ import { Ring } from '../components/Ring'
 import { SubjectIcon } from '../components/SubjectIcon'
 import { SubjectForm } from '../components/SubjectForm'
 import { QuickAddSubject } from '../components/QuickAddSubject'
+import { beginFocus } from '../focus/begin'
 import { dayKey, weekStartKey } from '../lib/dates'
 import { examPlan } from '../lib/exams'
 import { duration } from '../lib/format'
@@ -22,6 +23,8 @@ export function Subjects() {
   const exams = useApp((s) => s.exams)
   const weekStart = useApp((s) => s.settings.weekStart)
   const updateSubject = useApp((s) => s.updateSubject)
+  const staminaMin = useApp((s) => s.stamina.lengthMin)
+  const busy = useApp((s) => !!s.timer)
   const [editing, setEditing] = useState<Subject | 'new' | null>(null)
 
   const active = subjects.filter((s) => !s.archived)
@@ -77,14 +80,19 @@ export function Subjects() {
                     {plan && plan.state !== 'past' ? ` · ${exam.title} ${plan.state === 'today' ? 'today' : `in ${plan.daysLeft} ${plan.daysLeft === 1 ? 'day' : 'days'}`}` : ''}
                   </p>
                 </div>
+                {!busy && (
+                  <button type="button" className="btn btn-secondary h-10 self-start mt-auto" onClick={() => beginFocus(s.id, 'stamina', staminaMin)}>
+                    Study this · {staminaMin} min
+                  </button>
+                )}
               </li>
             )
           })}
         </ul>
       ) : (
         <section className="panel max-w-2xl">
-          <h2 className="text-lg font-medium">Start with one course</h2>
-          <p className="mt-1 text-[15px] text-muted">Give it a name now. You can pick a colour, an icon and goals any time.</p>
+          <h2 className="text-base font-medium">Start with one course</h2>
+          <p className="mt-1 text-base text-muted">Give it a name now. You can pick a colour, an icon and goals any time.</p>
           <QuickAddSubject className="mt-5" />
         </section>
       )}
@@ -96,7 +104,7 @@ export function Subjects() {
             {archived.map((s) => (
               <li key={s.id} className="flex items-center gap-3 py-3">
                 <SubjectIcon icon={s.icon} size={16} color={colorVar(s.color)} />
-                <span className="flex-1 truncate text-[15px]">{s.name}</span>
+                <span className="flex-1 truncate text-sm">{s.name}</span>
                 <button type="button" className="btn btn-secondary h-9" onClick={() => updateSubject(s.id, { archived: false })}>
                   Restore
                 </button>

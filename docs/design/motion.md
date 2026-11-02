@@ -32,6 +32,8 @@ From emil-design-eng on 2026-11-03.
 
 ## Reward moments (rare, so they can delight)
 
+*Revised after the impeccable critique (2026-11-03):* the finish card shows the ladder on **every** stamina round. The newest round pip pops in (scale 0.6 → 1, 400 ms, small overshoot), or on a step-up the new rung fills. Today's total sits beside the minutes. An early stop shows minutes only, with no partial ring. The step-up reward card is not repeated on Focus.
+
 They should feel calm and earned. No confetti, no bounce on text, no sound beyond the chime.
 
 1. **Session finished.**
@@ -45,7 +47,7 @@ They should feel calm and earned. No confetti, no bounce on text, no sound beyon
 2. **Stamina step-up.**
    - On the finish card, the ladder appears and the newly reached rung fills with `scaleX` 0 → 1 (origin left) over 700ms `--ease-out`, after a 300ms delay.
    - The label "Next round: 28 min" crossfades in with `blur(2px)` → 0.
-   - **Step-down** has no motion beyond a crossfade. Its copy is kind: "Let's settle at 25 for a bit."
+   - There is no step-down: stamina only grows (user decision, 2026-11-03).
 3. **Sitting done.**
    - The three round dots fill one after another, 120ms apart. Each scales 0.6 → 1 over 400ms `--ease-pop`.
    - Copy: "Three rounds. That's a real sitting."

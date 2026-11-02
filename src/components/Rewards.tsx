@@ -1,15 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { X } from 'lucide-react'
 import { useApp } from '../store'
-import { Ladder } from './Ladder'
 import type { RewardEvent } from '../lib/flow'
 
 function copy(e: RewardEvent, subjectName: (id: string) => string): { title: string; body: string } | null {
   switch (e.type) {
     case 'staminaUp':
       return { title: 'Your focus is growing.', body: `Next round: ${e.lengthMin} minutes.` }
-    case 'staminaDown':
-      return { title: `Let’s settle at ${e.lengthMin} for a bit.`, body: 'Rounds you finish build focus fastest.' }
     case 'sittingDone':
       return { title: `${e.rounds === 3 ? 'Three' : e.rounds} rounds. That’s a real sitting.`, body: 'Take the long break. You’ve earned it.' }
     case 'dailyGoal':
@@ -25,13 +22,15 @@ function copy(e: RewardEvent, subjectName: (id: string) => string): { title: str
 export function Rewards({ inline = false }: { inline?: boolean }) {
   const reward = useApp((s) => s.rewards[0])
   const subjects = useApp((s) => s.subjects)
-  const stamina = useApp((s) => s.stamina)
-  const goal = useApp((s) => s.settings.staminaGoalMin)
   const shift = useApp((s) => s.shiftReward)
   const card = useRef<HTMLDivElement>(null)
 
   // Memoised on the event itself: the break screen re-renders every second and must not restart the timer or the entrance.
-  const text = useMemo(() => (reward ? copy(reward, (id) => subjects.find((s) => s.id === id)?.name ?? 'Your') : null), [reward, subjects])
+  // On Focus the finish card already shows a step-up with the ladder, so the card skips it there.
+  const text = useMemo(
+    () => (reward && !(inline && reward.type === 'staminaUp') ? copy(reward, (id) => subjects.find((s) => s.id === id)?.name ?? 'Your') : null),
+    [reward, subjects, inline],
+  )
 
   useEffect(() => {
     if (!reward) return
@@ -55,13 +54,8 @@ export function Rewards({ inline = false }: { inline?: boolean }) {
       {reward && text && (
         <div ref={card} key={JSON.stringify(reward)} className={`${inline ? 'card' : 'toast max-w-sm'} pointer-events-auto w-full p-4 pr-3 flex gap-3`}>
           <div className="flex-1 min-w-0">
-            <p className="text-[15px] font-medium">{text.title}</p>
+            <p className="text-base font-medium">{text.title}</p>
             <p className="text-sm text-muted mt-0.5">{text.body}</p>
-            {reward.type === 'staminaUp' && (
-              <div className="mt-3">
-                <Ladder stamina={stamina} goal={goal} celebrate pips={false} />
-              </div>
-            )}
           </div>
           <button type="button" className="btn-icon -mt-1 size-9" aria-label="Dismiss" onClick={shift}>
             <X size={16} strokeWidth={1.75} aria-hidden="true" />

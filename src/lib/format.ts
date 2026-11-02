@@ -17,10 +17,6 @@ export function duration(min: number): string {
   return m ? `${h} h ${m} min` : `${h} h`
 }
 
-export function hours(h: number): string {
-  return `${Number(h.toFixed(2))} h`
-}
-
 export function greeting(hour: number): string {
   if (hour >= 5 && hour < 12) return 'Good morning'
   if (hour >= 12 && hour < 17) return 'Good afternoon'

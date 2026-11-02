@@ -29,6 +29,7 @@ export function Log() {
 
   return (
     <Page>
+      <div className="max-w-3xl">
       <TitleRow
         title="Log"
         line={sessions.length ? `${duration(total)} across ${sessions.length} ${sessions.length === 1 ? 'session' : 'sessions'}` : 'Every session lands here, finished or not.'}
@@ -41,7 +42,7 @@ export function Log() {
       />
 
       {days.length ? (
-        <div className="flex flex-col gap-8 max-w-3xl">
+        <div className="flex flex-col gap-8">
           {days.map(([key, list]) => (
             <section key={key} aria-labelledby={`day-${key}`} style={{ contentVisibility: 'auto', containIntrinsicSize: `auto ${list.length * 64 + 40}px` }}>
               <div className="flex items-baseline justify-between mb-2 px-1">
@@ -57,14 +58,14 @@ export function Log() {
                     <li key={s.id} className="flex items-start gap-3 py-3.5">
                       <span className="size-2 rounded-full mt-[7px] shrink-0" style={{ background: colorVar(subject?.color ?? '') }} aria-hidden="true" />
                       <div className="min-w-0 flex-1">
-                        <p className="text-[15px]">
+                        <p className="text-sm">
                           {subject?.name ?? 'Subject'}
                           <span className="meta"> · {timeOfDay(s.startedAt)}</span>
                         </p>
                         {s.note && <p className="text-sm text-muted mt-0.5 break-words">{s.note}</p>}
                         {s.parked.length > 0 && <p className="meta mt-1 break-words">Parked: {s.parked.join(' · ')}</p>}
                       </div>
-                      <p className="text-[15px] num shrink-0">{duration(s.durationSec / 60)}</p>
+                      <p className="text-sm num shrink-0">{duration(s.durationSec / 60)}</p>
                       <button type="button" className="btn-icon -my-2 -mr-2 shrink-0" aria-label={`Edit ${subject?.name ?? ''} session at ${timeOfDay(s.startedAt)}`} onClick={() => setEditing(s)}>
                         <Pencil size={16} strokeWidth={1.75} aria-hidden="true" />
                       </button>
@@ -76,9 +77,9 @@ export function Log() {
           ))}
         </div>
       ) : (
-        <section className="panel max-w-2xl">
-          <h2 className="text-lg font-medium">Your first session will show up here.</h2>
-          <p className="mt-1 text-[15px] text-muted">
+        <section className="panel">
+          <h2 className="text-base font-medium">Your first session will show up here.</h2>
+          <p className="mt-1 text-base text-muted">
             {subjects.length ? 'Start one from Today, or add one you did away from the app.' : 'Add a subject, then start one from Today.'}
           </p>
           <a href={subjects.length ? '#/today' : '#/subjects'} className="btn btn-secondary mt-5">
@@ -87,6 +88,7 @@ export function Log() {
         </section>
       )}
 
+      </div>
       <SessionForm session={editing} onClose={() => setEditing(null)} />
     </Page>
   )

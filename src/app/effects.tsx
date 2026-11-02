@@ -13,7 +13,11 @@ export function useTheme() {
     const mq = matchMedia('(prefers-color-scheme: dark)')
     const apply = () => {
       const t = theme === 'system' ? (mq.matches ? 'dark' : 'light') : theme
-      document.documentElement.dataset.theme = t
+      const root = document.documentElement
+      // Swap themes in one frame: no colour transition may run between the two palettes.
+      root.classList.add('theme-switching')
+      root.dataset.theme = t
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-switching')))
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#0f1110' : '#ffffff')
     }
     apply()
@@ -24,12 +28,11 @@ export function useTheme() {
 
 /** On a screen change, move focus to its title so keyboard and screen-reader users land in the right place. */
 export function useScreenFocus(route: Route) {
-  const first = useRef(true)
+  const prev = useRef(route)
   useEffect(() => {
-    if (first.current) {
-      first.current = false
-      return
-    }
+    // Compare with the previous route (not a first-run flag) so StrictMode's double effect never steals focus on load.
+    if (prev.current === route) return
+    prev.current = route
     scrollTo(0, 0)
     document.querySelector<HTMLElement>('[data-screen-title]')?.focus({ preventScroll: true })
   }, [route])
@@ -40,12 +43,18 @@ export function useScreenFocus(route: Route) {
  * One timeout to the exact end: a single timer isn't throttled like an interval in a background tab.
  */
 export function TimerDriver() {
-  const timer = useApp((s) => s.timer)
+  // Keyed on the timer's values, not its identity: a rehydrate from another tab must not re-arm it.
+  const key = useApp((s) => (s.timer ? [s.timer.phase, s.timer.startedAt, s.timer.pausedAt, s.timer.plannedSec, s.timer.pausedSec].join('|') : ''))
   useEffect(() => {
+    const timer = useApp.getState().timer
     if (!timer || timer.pausedAt) return
     const ms = timerEndMs(timer) - Date.now()
     if (timer.phase !== 'focus' && ms < -5000) return // break ended long ago (e.g. reload): don't chime again
     const id = setTimeout(() => {
+      // With two tabs open both timers fire; re-read storage so only the first one logs the round.
+      useApp.persist.rehydrate()
+      const now = useApp.getState().timer
+      if (now?.startedAt !== timer.startedAt || now.phase !== timer.phase) return
       const s = useApp.getState()
       const name = s.subjects.find((x) => x.id === timer.subjectId)?.name ?? 'Your subject'
       if (s.settings.chime) playChime()
@@ -64,7 +73,7 @@ export function TimerDriver() {
       }
     }, Math.max(0, ms))
     return () => clearTimeout(id)
-  }, [timer])
+  }, [key])
   return null
 }
 

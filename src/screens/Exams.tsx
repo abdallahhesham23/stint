@@ -7,7 +7,7 @@ import { ExamForm } from '../components/ExamForm'
 import { SubjectIcon } from '../components/SubjectIcon'
 import { dayKey } from '../lib/dates'
 import { examPlan } from '../lib/exams'
-import { hours, shortDate } from '../lib/format'
+import { duration, shortDate } from '../lib/format'
 import { colorVar } from '../lib/palette'
 import type { Exam } from '../lib/types'
 
@@ -59,7 +59,7 @@ export function Exams() {
                     <Pencil size={16} strokeWidth={1.75} aria-hidden="true" />
                   </button>
                 </div>
-                <h2 className="text-lg font-medium mt-1">{e.title}</h2>
+                <h2 className="text-base font-medium mt-1">{e.title}</h2>
                 <div className="mt-5 flex items-end justify-between gap-4">
                   <p className="figure">
                     {p.state === 'today' ? 'Today' : p.daysLeft}
@@ -68,20 +68,20 @@ export function Exams() {
                   <p className="meta pb-1">{shortDate(e.date)}</p>
                 </div>
                 <div className="mt-5">
-                  <div className="h-2 rounded-full bg-track overflow-hidden" role="img" aria-label={`${hours(p.hoursDone)} of ${hours(e.hoursNeeded)} studied`}>
-                    <div className="h-full rounded-full bg-accent" style={{ width: `${share * 100}%` }} />
+                  <div className="h-2 rounded-full bg-track overflow-hidden" role="img" aria-label={`${duration(p.hoursDone * 60)} of ${duration(e.hoursNeeded * 60)} studied`}>
+                    <div className="h-full rounded-full" style={{ width: `${share * 100}%`, background: colorVar(subject?.color ?? '') }} />
                   </div>
                   <div className="mt-2 flex justify-between meta num">
-                    <span>{hours(Math.round(p.hoursDone * 4) / 4)} studied</span>
-                    <span>{hours(e.hoursNeeded)} planned</span>
+                    <span>{duration(p.hoursDone * 60)} studied</span>
+                    <span>{duration(e.hoursNeeded * 60)} planned</span>
                   </div>
                 </div>
-                <p className="mt-4 text-[15px]">
+                <p className="mt-4 text-sm">
                   {p.state === 'today'
                     ? 'Exam day. You’ve put in the work.'
                     : p.hoursRemaining <= 0
                       ? 'You’ve done the hours. Keep it light and keep it fresh.'
-                      : `About ${hours(p.dailyHours ?? 0)} a day gets you there.`}
+                      : `About ${duration((p.dailyHours ?? 0) * 60)} a day gets you there.`}
                 </p>
               </li>
             )
@@ -89,8 +89,8 @@ export function Exams() {
         </ul>
       ) : (
         <section className="panel max-w-2xl">
-          <h2 className="text-lg font-medium">No exams on the calendar</h2>
-          <p className="mt-1 text-[15px] text-muted">
+          <h2 className="text-base font-medium">No exams on the calendar</h2>
+          <p className="mt-1 text-base text-muted">
             {subjects.length ? 'Add the date and a rough number of hours you want in before it.' : 'Add a subject first, then its exams.'}
           </p>
           {subjects.length ? (
@@ -110,7 +110,7 @@ export function Exams() {
           <summary className="section-title inline-flex py-2">Done ({done.length})</summary>
           <ul className="mt-3 panel !py-2 divide-y divide-line max-w-2xl">
             {done.map((e) => (
-              <li key={e.id} className="flex items-center gap-3 py-3 text-[15px]">
+              <li key={e.id} className="flex items-center gap-3 py-3 text-sm">
                 <span className="flex-1 truncate">
                   {byId.get(e.subjectId)?.name ?? 'Subject'} · {e.title}
                 </span>

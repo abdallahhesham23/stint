@@ -50,7 +50,7 @@ Tapping the subject chip on the button opens a picker. With no subjects at all, 
 - A **stamina round** is a focus round started at `staminaMin`.
 - A stamina round is **completed** when the timer reaches zero. Extending a round with "+10" still counts as completed.
 - After **3 completed stamina rounds** at the current length, the length goes up by `max(2, round(len × 0.1))` minutes, capped at the goal. Example: 25 → 28 → 31 → 34 → 37 → 41 → 45 → 50. The step-up is a reward moment: "Next round: 28 min. Your focus is growing."
-- After **3 early stops in a row** (a stamina round stopped before zero) at a length above the floor, the length steps back one level. The copy is kind: "Let's settle at 25 for a bit." The length never drops below the floor.
+- **Stamina only grows** (user decision, 2026-11-03 critique). An early stop is logged and counts toward today, but it never lowers the length or erases progress at the current length.
 - Early stops still log their time. Rounds started from "Just 5 minutes" or a custom length don't affect stamina.
 
 ### Sittings (chain rounds)

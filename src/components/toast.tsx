@@ -50,7 +50,7 @@ export function Toaster() {
   }, [t])
 
   return (
-    <div role="status" aria-live="polite" className="fixed z-40 inset-x-4 bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-6 flex justify-center pointer-events-none">
+    <div role="status" aria-live="polite" className="fixed z-40 inset-x-4 bottom-[calc(84px+env(safe-area-inset-bottom))] md:bottom-6 flex justify-center pointer-events-none">
       {t && (
         <div key={t.id} className="toast pointer-events-auto flex items-center gap-4 pl-4 pr-2 py-2 min-h-12 text-sm max-w-md">
           <span>{t.text}</span>

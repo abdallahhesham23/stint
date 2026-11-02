@@ -1,12 +1,12 @@
 import { expect, test } from 'vitest'
-import { previousLevel, recordStaminaRound, stepUp } from './stamina'
+import { recordStaminaRound, stepUp } from './stamina'
 import { defaultData, type Stamina } from './types'
 
 const base = (): Stamina => defaultData().stamina
 const today = '2026-11-03'
 const run = (s: Stamina, results: boolean[]) => {
   let state = s
-  let event: 'up' | 'down' | null = null
+  let event: 'up' | null = null
   for (const done of results) ({ stamina: state, event } = recordStaminaRound(state, done, 50, today))
   return { stamina: state, event }
 }
@@ -31,20 +31,12 @@ test('no step past the goal', () => {
   expect(stamina.lengthMin).toBe(50)
 })
 
-test('three early stops in a row step back one level, never below the floor', () => {
-  const down = run({ ...base(), lengthMin: 31 }, [false, false, false])
-  expect(down.event).toBe('down')
-  expect(down.stamina.lengthMin).toBe(28)
-  const floor = run(base(), [false, false, false])
-  expect(floor.event).toBeNull()
-  expect(floor.stamina.lengthMin).toBe(25)
+test('early stops never lower the length or erase progress at this length', () => {
+  const r = run({ ...base(), lengthMin: 31, completedAtLength: 2 }, [false, false, false, false])
+  expect(r.event).toBeNull()
+  expect(r.stamina).toMatchObject({ lengthMin: 31, completedAtLength: 2 })
 })
 
-test('a completion resets the early-stop count', () => {
-  expect(run({ ...base(), lengthMin: 31 }, [false, false, true]).stamina.earlyStopsInRow).toBe(0)
-})
-
-test('previousLevel walks the ladder from the floor', () => {
-  expect(previousLevel(31, 25, 50)).toBe(28)
-  expect(previousLevel(25, 25, 50)).toBe(25)
+test('an early stop between completions still lets the third completion step up', () => {
+  expect(run(base(), [true, false, true, true]).event).toBe('up')
 })

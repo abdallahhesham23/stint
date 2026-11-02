@@ -7,7 +7,7 @@ import type { AppData, ID, Session, Timer, TimerKind } from './types'
 
 export type RewardEvent =
   | { type: 'session'; minutes: number; completed: boolean }
-  | { type: 'staminaUp' | 'staminaDown'; lengthMin: number }
+  | { type: 'staminaUp'; lengthMin: number }
   | { type: 'sittingDone'; rounds: number }
   | { type: 'dailyGoal'; subjectId: ID }
   | { type: 'streak'; days: number }
@@ -81,7 +81,7 @@ export function completeFocus(
   if (t.kind === 'stamina') {
     const r = recordStaminaRound(d.stamina, completed, d.settings.staminaGoalMin, today)
     next.stamina = r.stamina
-    if (r.event) events.push({ type: r.event === 'up' ? 'staminaUp' : 'staminaDown', lengthMin: r.stamina.lengthMin })
+    if (r.event) events.push({ type: 'staminaUp', lengthMin: r.stamina.lengthMin })
   }
 
   if (completed) {

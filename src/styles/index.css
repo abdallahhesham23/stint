@@ -10,6 +10,8 @@
   --border: #e1e5e0;
   --control: #7f847e;
   --track: #e1e5e0;
+  --rung: #c3c8c2;
+  --selected: #ffffff;
   --text: #1f201d;
   --muted: #5c5f5a;
   --accent: #1b6e66;
@@ -27,7 +29,6 @@
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 :root[data-theme="dark"] {
@@ -39,6 +40,8 @@
   --border: #2a2d2b;
   --control: #6c716d;
   --track: #2c302e;
+  --rung: #3e4341;
+  --selected: #3a3e3c;
   --text: #eef0ec;
   --muted: #a3a7a1;
   --accent: #5cc1b2;
@@ -63,6 +66,7 @@
   --color-line: var(--border);
   --color-control: var(--control);
   --color-track: var(--track);
+  --color-rung: var(--rung);
   --color-ink: var(--text);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
@@ -87,6 +91,12 @@
   }
   body { margin: 0; background: var(--ground); min-height: 100dvh; }
   ::selection { background: var(--accent-wash); color: var(--text); }
+  html { caret-color: var(--accent); scrollbar-color: var(--control) transparent; }
+  ::placeholder { color: var(--muted); opacity: 1; }
+  p { text-wrap: pretty; }
+  h1, h2 { text-wrap: balance; }
+  /* Titles take focus on a screen change for screen readers; they are not controls, so no ring. */
+  [data-screen-title]:focus { outline: none; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   button, [role="button"], summary, label[for], select { cursor: pointer; }
   input, select, textarea { font: inherit; color: inherit; }
@@ -130,16 +140,15 @@
   textarea.input { height: auto; min-height: 88px; padding: 10px 14px; resize: vertical; line-height: 1.45; }
   .label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
 
-  .segmented { display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px; background: var(--surface); }
+  .segmented { display: inline-flex; flex-wrap: wrap; padding: 3px; gap: 2px; border-radius: 999px; background: var(--active); }
   .segmented > label { position: relative; }
   .segmented input { position: absolute; opacity: 0; inset: 0; }
   .segmented span {
     display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px;
     font-size: 14px; color: var(--muted); transition: background-color 150ms ease, color 150ms ease;
   }
-  .segmented input:checked + span { background: var(--raised); color: var(--text); }
+  .segmented input:checked + span { background: var(--selected); color: var(--text); }
   .segmented input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
-  :root[data-theme="dark"] .segmented input:checked + span { background: var(--active); }
 
   .nav-item {
     display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 10px; border-radius: 10px;
@@ -200,7 +209,11 @@
 @media (pointer: coarse) {
   .btn { min-height: 44px; }
   .btn-icon { width: 44px; height: 44px; }
+  .segmented span { height: 40px; }
 }
+
+/* A theme change is instant; only state changes animate. */
+.theme-switching, .theme-switching * { transition: none !important; }
 
 /* Focus stage: the break wash eases in; the arc fills linearly with the clock. */
 .focus-stage { transition: background-color 800ms ease; }

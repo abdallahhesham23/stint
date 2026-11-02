@@ -6,17 +6,6 @@ export function stepUp(len: number, goal: number): number {
   return Math.min(goal, len + Math.max(2, Math.round(len * 0.1)))
 }
 
-export function previousLevel(len: number, floor: number, goal: number): number {
-  let prev = floor
-  for (let level = floor; level < len; ) {
-    prev = level
-    const next = stepUp(level, goal)
-    if (next === level) break
-    level = next
-  }
-  return prev
-}
-
 /** The ladder of lengths from floor to goal, for the stamina indicator. */
 export function ladder(floor: number, goal: number): number[] {
   const out = [floor]
@@ -29,7 +18,7 @@ export function recordStaminaRound(
   completed: boolean,
   goalMin: number,
   todayKey: string,
-): { stamina: Stamina; event: 'up' | 'down' | null } {
+): { stamina: Stamina; event: 'up' | null } {
   if (completed) {
     const done = Math.min(ROUNDS_PER_LEVEL, s.completedAtLength + 1)
     if (done < ROUNDS_PER_LEVEL || s.lengthMin >= goalMin) {
@@ -41,13 +30,6 @@ export function recordStaminaRound(
       event: 'up',
     }
   }
-  const stops = Math.min(ROUNDS_PER_LEVEL, s.earlyStopsInRow + 1)
-  if (stops < ROUNDS_PER_LEVEL || s.lengthMin <= s.floorMin) {
-    return { stamina: { ...s, earlyStopsInRow: stops }, event: null }
-  }
-  const lengthMin = previousLevel(s.lengthMin, s.floorMin, goalMin)
-  return {
-    stamina: { ...s, lengthMin, completedAtLength: 0, earlyStopsInRow: 0, history: [...s.history, { date: todayKey, lengthMin }] },
-    event: 'down',
-  }
+  // Stamina only grows: an early stop is logged elsewhere and never takes a step away.
+  return { stamina: { ...s, earlyStopsInRow: s.earlyStopsInRow + 1 }, event: null }
 }

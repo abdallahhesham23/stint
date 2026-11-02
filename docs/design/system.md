@@ -84,13 +84,18 @@ Subject colours are identity. They appear as dots, icons and the per-subject bar
 
 Stored as the key (`subject.color = 'ocean'`). The CSS variable is `--subj-ocean`.
 
+### Added after the critique
+- `--rung`: unreached ladder steps (`#c3c8c2` light, `#3e4341` dark), a step darker than `--track` so the scale reads.
+- `--selected`: the selected segment (`#ffffff` light, `#3a3e3c` dark) on an `--active` track.
+- Exam progress bars take the subject colour, not teal.
+
 ## 2. Type
 
 | Role | Face | Size / line | Weight | Notes |
 |---|---|---|---|---|
 | Greeting (Today h1) | Instrument Serif | 48/52 desktop, 34/38 phone | 400 | tracking -0.01em; one line on desktop |
 | Focus timer | Instrument Serif | clamp(112px, 22vw, 220px)/1 | 400 | tabular figures; the only display-size type in the app |
-| Screen title (h1 elsewhere) | Instrument Sans | 24/30 | 500 | a noun: "Stats", "Log" |
+| Screen title (h1 elsewhere) | Instrument Sans | 24/30 | 500 | a noun: "Stats", "Log"; dialog titles too |
 | Figure (KPI) | Instrument Sans | 32/36 | 400 | every figure is regular weight; unit as a 14px muted suffix |
 | Lead line | Instrument Sans | 16/24 | 400 | the finding under the greeting; empty-state sentences |
 | Section title | Instrument Sans | 14/20 | 600 | panel titles |

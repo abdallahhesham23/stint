@@ -44,7 +44,17 @@ export function Ring({ value, size = 64, stroke = 6, color = 'var(--accent)', la
       <g transform={`rotate(-90 ${size / 2} ${size / 2})`} fill="none" strokeWidth={stroke} strokeLinecap="round">
         <circle cx={size / 2} cy={size / 2} r={r} stroke="var(--track)" />
         <circle cx={size / 2} cy={size / 2} r={r} stroke={color} style={arc(lap1)} opacity={lap1 > 0 ? 1 : 0} />
-        {lap2 > 0 && <circle cx={size / 2} cy={size / 2} r={r} stroke={color} style={arc(lap2)} opacity={0.6} />}
+        {/* Past the goal, a thin inner lap shows how far past, distinct from a ring that is just full. */}
+        {lap2 > 0 && (
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={r - stroke - 1}
+            stroke={color}
+            strokeWidth={Math.max(2, stroke / 2)}
+            style={{ ...arc(lap2), strokeDasharray: 2 * Math.PI * (r - stroke - 1), strokeDashoffset: 2 * Math.PI * (r - stroke - 1) * (1 - lap2) }}
+          />
+        )}
         <circle
           ref={pulse}
           cx={size / 2}

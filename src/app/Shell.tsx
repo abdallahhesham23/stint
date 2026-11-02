@@ -19,7 +19,7 @@ export function Shell({ route, children }: { route: Route; children: ReactNode }
         Skip to content
       </a>
       <aside className="hidden md:flex flex-col sticky top-0 h-dvh px-3 py-6">
-        <a href="#/today" className="flex items-center gap-2.5 px-2.5 mb-8 text-[17px] font-semibold tracking-[-0.01em]">
+        <a href="#/today" className="flex items-center gap-2.5 px-2.5 mb-8 text-base font-semibold tracking-[-0.01em]">
           <Mark size={22} />
           Stint
         </a>
@@ -37,7 +37,7 @@ export function Shell({ route, children }: { route: Route; children: ReactNode }
         </a>
       </aside>
 
-      <main id="main" className="pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-16">{children}</main>
+      <main id="main" className="pb-[calc(80px+env(safe-area-inset-bottom))] md:pb-16">{children}</main>
 
       <nav
         aria-label="Main"
@@ -50,10 +50,11 @@ export function Shell({ route, children }: { route: Route; children: ReactNode }
               key={r}
               href={`#/${r}`}
               aria-current={on ? 'page' : undefined}
-              className={`flex flex-col items-center justify-center gap-1 h-14 text-xs ${on ? 'text-ink' : 'text-muted'}`}
+              className={`flex flex-col items-center justify-center gap-0.5 h-16 text-xs ${on ? 'text-ink font-medium' : 'text-muted'}`}
             >
               <Icon size={20} strokeWidth={on ? 2 : 1.75} aria-hidden="true" />
               {label}
+              <span className={`size-1 rounded-full ${on ? 'bg-ink' : 'bg-transparent'}`} aria-hidden="true" />
             </a>
           )
         })}
@@ -74,7 +75,7 @@ export function TitleRow({ title, line, action }: { title: string; line?: ReactN
         <h1 className="screen-title" tabIndex={-1} data-screen-title>
           {title}
         </h1>
-        {line && <p className="mt-1 text-[15px] text-muted">{line}</p>}
+        {line && <p className="mt-1 text-base text-muted">{line}</p>}
       </div>
       {action}
     </header>
