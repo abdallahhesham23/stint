@@ -18,6 +18,6 @@ export function examPlan(e: Exam, sessions: Session[], todayKey: string): ExamPl
   const hoursRemaining = Math.max(0, e.hoursNeeded - hoursDone)
   const state = daysLeft < 0 ? 'past' : daysLeft === 0 ? 'today' : 'upcoming'
   // Rounded up to the quarter hour; the epsilon keeps float noise (3.0000001) from adding a quarter.
-  const dailyHours = state === 'upcoming' ? Math.ceil((hoursRemaining / daysLeft) * 4 - 1e-9) / 4 : null
+  const dailyHours = state === 'upcoming' ? Math.max(0, Math.ceil((hoursRemaining / daysLeft) * 4 - 1e-9) / 4) : null
   return { daysLeft, hoursDone, hoursRemaining, dailyHours, state }
 }
