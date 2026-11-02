@@ -9,7 +9,8 @@ export function beginFocus(subjectId: string, kind: TimerKind, minutes: number) 
     go('focus')
   }
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (!document.startViewTransition || reduced) return run()
+  // Already on Focus (starting the next round from a break): no hashchange will come, so no transition.
+  if (!document.startViewTransition || reduced || location.hash === '#/focus') return run()
   // The hash route renders on 'hashchange', so the transition waits for it before taking the new snapshot.
   document.startViewTransition(
     () =>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { X } from 'lucide-react'
 import { useApp } from '../store'
 import { Ladder } from './Ladder'
@@ -30,7 +30,8 @@ export function Rewards({ inline = false }: { inline?: boolean }) {
   const shift = useApp((s) => s.shiftReward)
   const card = useRef<HTMLDivElement>(null)
 
-  const text = reward ? copy(reward, (id) => subjects.find((s) => s.id === id)?.name ?? 'Your') : null
+  // Memoised on the event itself: the break screen re-renders every second and must not restart the timer or the entrance.
+  const text = useMemo(() => (reward ? copy(reward, (id) => subjects.find((s) => s.id === id)?.name ?? 'Your') : null), [reward, subjects])
 
   useEffect(() => {
     if (!reward) return
@@ -47,7 +48,7 @@ export function Rewards({ inline = false }: { inline?: boolean }) {
       reduced ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translateY(-12px) scale(0.98)' }, { opacity: 1, transform: 'none' }],
       { duration: reduced ? 200 : 400, delay: 400, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'backwards' },
     )
-  }, [text])
+  }, [reward, text])
 
   return (
     <div aria-live="polite" className={inline ? 'w-full max-w-lg mt-3' : 'fixed z-40 inset-x-4 top-4 md:top-6 flex justify-center pointer-events-none'}>
