@@ -1,0 +1,234 @@
+@import "tailwindcss";
+
+/* Tokens: docs/design/system.md (contrast-checked) and docs/design/motion.md */
+:root {
+  color-scheme: light;
+  --ground: #ffffff;
+  --surface: #f3f5f2;
+  --raised: #ffffff;
+  --active: #e7eae6;
+  --border: #e1e5e0;
+  --control: #7f847e;
+  --track: #e1e5e0;
+  --text: #1f201d;
+  --muted: #5c5f5a;
+  --accent: #1b6e66;
+  --accent-hover: #155a53;
+  --on-accent: #ffffff;
+  --accent-wash: #e3efed;
+  --positive: #2e7d32;
+  --negative: #b42318;
+  --heat-0: #eef0ed; --heat-1: #cfe5e1; --heat-2: #9ccbc4; --heat-3: #5fa99f; --heat-4: #1b6e66;
+  --scrim: rgb(15 17 16 / 0.42);
+  --shadow-float: 0 12px 32px rgb(20 28 24 / 0.12), 0 2px 6px rgb(20 28 24 / 0.06);
+  --float-edge: transparent;
+  --subj-ocean: #2f6fb0; --subj-moss: #4f8a3c; --subj-amber: #a86f14; --subj-rose: #c04a6b;
+  --subj-rust: #b4552d; --subj-slate: #5b6b7a; --subj-sand: #8f7349; --subj-charcoal: #3d3f3a;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0f1110;
+  --surface: #181a19;
+  --raised: #202322;
+  --active: #272a29;
+  --border: #2a2d2b;
+  --control: #6c716d;
+  --track: #2c302e;
+  --text: #eef0ec;
+  --muted: #a3a7a1;
+  --accent: #5cc1b2;
+  --accent-hover: #7bd0c3;
+  --on-accent: #062b26;
+  --accent-wash: #16302c;
+  --positive: #7cc47f;
+  --negative: #f0857a;
+  --heat-0: #1e201f; --heat-1: #1d3d39; --heat-2: #23615a; --heat-3: #2f8f84; --heat-4: #5cc1b2;
+  --scrim: rgb(0 0 0 / 0.6);
+  --shadow-float: 0 16px 40px rgb(0 0 0 / 0.5);
+  --float-edge: #2a2d2b;
+  --subj-ocean: #6ea5e0; --subj-moss: #8cc070; --subj-amber: #e0a84a; --subj-rose: #e98aa3;
+  --subj-rust: #e48a62; --subj-slate: #9fb0c0; --subj-sand: #c9ab7e; --subj-charcoal: #c8cac4;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-active: var(--active);
+  --color-line: var(--border);
+  --color-control: var(--control);
+  --color-track: var(--track);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-wash: var(--accent-wash);
+  --color-negative: var(--negative);
+  --font-sans: "Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --radius-panel: 22px;
+  --radius-card: 14px;
+  --radius-input: 12px;
+}
+
+@layer base {
+  html {
+    background: var(--ground);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body { margin: 0; background: var(--ground); min-height: 100dvh; }
+  ::selection { background: var(--accent-wash); color: var(--text); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  button, [role="button"], summary, label[for], select { cursor: pointer; }
+  input, select, textarea { font: inherit; color: inherit; }
+  h1, h2, h3 { margin: 0; font-weight: 500; }
+  p { margin: 0; }
+}
+
+@layer components {
+  .num { font-variant-numeric: tabular-nums; }
+  .greeting { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; }
+  .panel { background: var(--surface); border-radius: 22px; padding: 20px; }
+  .card { background: var(--raised); border-radius: 14px; }
+  .section-title { font-size: 14px; line-height: 20px; font-weight: 600; }
+  .screen-title { font-size: 24px; line-height: 30px; font-weight: 500; }
+  .figure { font-size: 32px; line-height: 36px; font-weight: 400; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .unit { font-size: 14px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+  .meta { font-size: 12px; line-height: 16px; color: var(--muted); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid transparent;
+    font-size: 14px; font-weight: 500; white-space: nowrap; user-select: none;
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 160ms var(--ease-out);
+  }
+  .btn-primary { background: var(--accent); color: var(--on-accent); }
+  .btn-secondary { border-color: var(--control); color: var(--text); background: transparent; }
+  .btn-ghost { color: var(--text); background: transparent; }
+  .btn-big { height: 56px; font-size: 16px; padding: 0 28px; }
+  .btn-icon {
+    display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 999px;
+    color: var(--muted); background: transparent; border: 0;
+    transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease-out);
+  }
+  .link { font-size: 14px; font-weight: 500; color: var(--text); text-underline-offset: 3px; background: none; border: 0; padding: 0; }
+
+  .input {
+    height: 44px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid var(--control);
+    background: var(--raised); font-size: 15px;
+  }
+  .input:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+  textarea.input { height: auto; min-height: 88px; padding: 10px 14px; resize: vertical; line-height: 1.45; }
+  .label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+
+  .segmented { display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px; background: var(--surface); }
+  .segmented > label { position: relative; }
+  .segmented input { position: absolute; opacity: 0; inset: 0; }
+  .segmented span {
+    display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px;
+    font-size: 14px; color: var(--muted); transition: background-color 150ms ease, color 150ms ease;
+  }
+  .segmented input:checked + span { background: var(--raised); color: var(--text); }
+  .segmented input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+  :root[data-theme="dark"] .segmented input:checked + span { background: var(--active); }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 10px; border-radius: 10px;
+    font-size: 14px; color: var(--muted); transition: background-color 150ms ease, color 150ms ease;
+  }
+  .nav-item[aria-current="page"] { background: var(--active); color: var(--text); }
+
+  .sheet {
+    border: 1px solid var(--float-edge); padding: 0; margin: auto; color: var(--text);
+    background: var(--raised); border-radius: 22px; box-shadow: var(--shadow-float);
+    width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 48px);
+    opacity: 1; transform: none;
+    transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out), overlay 200ms allow-discrete, display 200ms allow-discrete;
+  }
+  .sheet:not([open]) { opacity: 0; transition-duration: 150ms; }
+  .sheet::backdrop { background: var(--scrim); opacity: 1; transition: opacity 200ms ease, overlay 200ms allow-discrete, display 200ms allow-discrete; }
+  .sheet:not([open])::backdrop { opacity: 0; }
+
+  .toast {
+    background: var(--raised); color: var(--text); border: 1px solid var(--float-edge);
+    border-radius: 14px; box-shadow: var(--shadow-float);
+    transition: opacity 400ms ease, transform 400ms ease;
+  }
+}
+
+@starting-style {
+  .sheet[open] { opacity: 0; }
+  .sheet[open]::backdrop { opacity: 0; }
+  .toast { opacity: 0; }
+}
+
+/* Hover only where a real pointer hovers. */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary:hover, .btn-ghost:hover, .btn-icon:hover { background: var(--active); color: var(--text); }
+  .nav-item:hover { color: var(--text); }
+  .link:hover { text-decoration: underline; }
+  .row-hover:hover { background: var(--active); }
+}
+
+/* Movement only for people who are fine with it; reduced motion keeps colour and opacity. */
+@media (prefers-reduced-motion: no-preference) {
+  .btn:active { transform: scale(0.97); }
+  .btn-icon:active { transform: scale(0.94); }
+  .sheet:not([open]) { transform: scale(0.96); }
+  @starting-style {
+    .sheet[open] { transform: scale(0.96); }
+    .toast { transform: translateY(100%); }
+  }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 250ms; }
+  ::view-transition-group(subject) { animation-duration: 350ms; animation-timing-function: var(--ease-out); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+  .btn-icon { width: 44px; height: 44px; }
+}
+
+/* Focus stage: the break wash eases in; the arc fills linearly with the clock. */
+.focus-stage { transition: background-color 800ms ease; }
+.focus-arc { transition: stroke-dashoffset 1s linear; }
+.rise { transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out); }
+@starting-style { .rise { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  @starting-style { .rise { transform: translateY(12px); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-stage { transition-duration: 200ms; }
+  .focus-arc { transition: none; }
+}
+
+/* Switch: a real checkbox with role="switch"; on is ink, not teal (system.md §4). */
+.switch {
+  appearance: none; flex: none; width: 36px; height: 22px; border-radius: 999px; margin: 0;
+  background: var(--control); position: relative; transition: background-color 150ms ease;
+}
+.switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 999px;
+  background: var(--raised); transition: transform 200ms var(--ease-out);
+}
+.switch:checked { background: var(--text); }
+.switch:checked::after { transform: translateX(14px); }
+:root[data-theme="dark"] .switch::after { background: var(--ground); }
+:root[data-theme="dark"] .switch:not(:checked)::after { background: var(--text); }
+summary { list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "›"; display: inline-block; width: 1em; transition: transform 150ms ease; color: var(--muted); }
+details[open] > summary::before { transform: rotate(90deg); }
